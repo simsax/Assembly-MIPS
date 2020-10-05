@@ -1,0 +1,66 @@
+		.data
+		
+		.text
+		.globl main
+		.ent main
+main:	addi $sp, $sp, -4
+		sw $ra, ($sp)
+		
+		li $t0, 15
+		li $t1, 16
+		li $t2, 17
+		li $t3, 18
+		li $s0, 223
+		li $s1, 224
+		li $s2, 225
+		li $s3, 226
+		
+		addi $sp, $sp, -16 # salvataggio registri $tx
+		sw $t0, ($sp)
+		sw $t1, 4($sp)
+		sw $t2, 8($sp)
+		sw $t3, 12($sp)
+		
+		addi $sp, $sp -8 # passaggio parametri
+		sw $t0, ($sp)
+		sw $s0, 4($sp)
+		jal somma
+		move $t4, $v0
+		addi $sp, $sp, 8
+		
+		lw $t0, ($sp) #ripristino registri $tx
+		lw $t1, 4($sp)
+		lw $t2, 8($sp)
+		lw $t3, 12($sp)
+		addi $sp, $sp, 16
+		
+		lw $ra, ($sp)
+		addiu $sp, 4
+		jr $ra
+		.end main
+		
+somma: 	addi $fp, $sp, -4 #usare $fp permette di avere un riferimento costante ai parametri ricevuti dal main
+		addi $sp, $sp, -16
+		sw $sp, ($sp) # salvataggio registri $sx
+		sw $s1, 4($sp)
+		sw $s2, 8($sp)
+		sw $s3, 12($sp)
+		
+		move $t0, $0
+		move $t1, $0
+		move $t2, $0
+		move $t3, $0
+		move $s0, $0
+		move $s1, $0
+		move $s2, $0
+		move $s3, $0
+		lw $t2, 4($fp)	# prelevamento dati da stack
+		lw $s2, 8($fp)
+		addu $v0, $t2, $s2
+		
+		lw $s0, ($sp)
+		lw $s1, 4($sp)
+		lw $s2, 8($sp)
+		lw $s3, 12($sp)
+		addi $sp, $sp, 16
+		jr $ra

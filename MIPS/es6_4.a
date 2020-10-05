@@ -1,0 +1,27 @@
+DIM = 7
+		.data
+vet:	.word 15, 870, 1200, -21, -1000, 15003, -1039581	
+		.text
+		.globl main
+		.ent main
+main:	la $a0, vet
+		li $a1, DIM
+		jal massimo
+		move $a0, $v0
+		li $v0, 1
+		syscall
+		li $v0, 10
+		syscall
+		.end main
+
+massimo: 
+		li $t3, 0
+		mul $t2, $a1, 4
+		add $t2, $t2, $a0
+ciclo:	lw $t1, ($a0)
+		blt $t1, $t3, next
+		add $t3, $t1, $0
+next:	addi $a0, $a0, 4
+		bne $a0, $t2, ciclo
+		move $v0, $t3
+		jr $ra

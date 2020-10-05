@@ -1,0 +1,38 @@
+		.data
+mex:	.asciiz "Inserisci un numero tra 0 e 3: "
+opa:	.word 2043
+opb:	.word 5
+res:	.space 4
+tab:	.word L0, L1, L2, L3
+
+		.text
+		.globl main
+		.ent main
+main: 	
+		lw $s0, opa
+		lw $s1, opb
+		la $a0, mex
+		li $v0, 4
+		syscall 
+		li $v0, 5
+		syscall
+		blt $v0, 0, errore
+		bgt $v0, 3, errore
+		move $t0, $v0 #k
+		la $t1, tab #indirizzo tab
+		sll $t0, $t0, 2 #k = k*4
+		add $t1, $t0, $t1
+		lw $t4, 0($t1)
+		jr $t4 #salta all'indirizzo contenuto in $t1
+L0:		add $t0, $s0, $s1	
+		j next
+L1:		sub $t0, $s0, $s1
+		j next
+L2:		mul $t0, $s0, $s1
+		j next
+L3:		div $t0, $s0, $s1
+next:	sw $t0, res
+errore:
+		li $v0, 10
+		syscall
+		.end main

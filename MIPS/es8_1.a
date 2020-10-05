@@ -1,0 +1,38 @@
+		.data
+ora_in:		.byte 12, 47
+ora_out: 	.byte 18, 14
+X:			.byte 1
+Y:			.byte 40
+		.text
+		.globl main
+		.ent main
+main:	addi $sp, $sp, -4
+		sw $ra, ($sp)
+		la $a0, ora_in
+		la $a1, ora_out
+		lbu $a2, X
+		lbu $a3, Y
+		jal costoParcheggio
+		lw $ra, ($sp)
+		addi $sp, $sp, 4
+		jr $ra
+		.end main
+		
+costoParcheggio:
+		lbu $t0, ($a0)
+		mul $t0, $t0, 60
+		lbu $t1, 1($a0)
+		add $t0, $t0, $t1 #ora ingresso in minuti
+		lbu $t1, ($a1)
+		mul $t1, $t1, 60
+		lbu $t2, 1($a1)
+		add $t1, $t1, $t2 #ora uscita in minuti
+		sub $t0, $t1, $t0 #periodo
+		div $t0, $a3
+		mflo $t0
+		mfhi $t1
+		beq $t1, 0, next
+		addiu $t0, $t0, 1
+next:	multu $t0, $a2
+		mflo $v0
+		jr $ra

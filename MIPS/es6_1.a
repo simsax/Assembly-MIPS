@@ -1,0 +1,40 @@
+		.data
+
+		.text
+		.globl main
+		.ent main
+main:	jal stampaTriangolo
+		jal stampaQuadrato
+		li $v0, 10
+		syscall
+		.end main
+		
+stampaTriangolo:
+		li $t0, 1		
+ciclo1:	li $t1, 0
+ciclo2: li $a0, 42
+		li $v0, 11
+		syscall
+		addi $t1, $t1, 1
+		blt $t1, $t0, ciclo2
+		li $a0, '\n'
+		li $v0, 11
+		syscall
+		addi $t0, $t0, 1
+		blt $t0, 9, ciclo1
+		jr $ra
+		
+stampaQuadrato:
+		li $t0, 0		
+ciclo3:	li $t1, 0
+ciclo4: li $a0, 42
+		li $v0, 11
+		syscall
+		addi $t1, $t1, 1
+		blt $t1, 9, ciclo4
+		li $a0, '\n'
+		li $v0, 11
+		syscall
+		addi $t0, $t0, 1
+		blt $t0, 9, ciclo3
+		jr $ra

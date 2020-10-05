@@ -1,0 +1,14 @@
+		.data
+vetr:	.word 12, 56, 1, -5
+vetc:	.word -51, 11, 0, 4
+mat:	.space 64
+
+		.text
+		.globl main
+		.ent main
+main: 	
+
+	
+		li $v0, 10
+		syscall
+		.end main

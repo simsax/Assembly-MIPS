@@ -1,0 +1,51 @@
+NUM = 5
+DIM = NUM*4
+SCONTO = 30
+ARROTONDA = 1
+		.data
+prezzi:		.word 39, 1880, 2394, 1000, 1590
+scontati:	.space DIM		
+totSconto:	.space 4
+		.text
+		.globl main
+		.ent main
+main:	addi $sp, $sp, -8
+		sw $ra, ($sp)
+		la $a0, prezzi
+		li $a2, NUM
+		li $a3, SCONTO
+		li $t0, ARROTONDA
+		sw $t0, 4($sp)
+		jal calcola_sconto
+		sw $v0, totSconto
+		lw $a0, totSconto
+		li $v0, 1
+		syscall
+		lw $ra, ($sp)
+		addi $sp, $sp, 8
+		jr $ra
+		.end main
+		
+calcola_sconto:
+		addi $fp, $sp, -4
+		lw $t4, 4($fp)	# arrotondamento
+		la $t5, scontati
+		move $v0, $0
+		move $t0, $0 #contatore ciclo
+		li $t3, 100
+ciclo:	lw $t1, ($a0) #prezzo
+		mul $t2, $t1, $a3
+		div $t2, $t3
+		mflo $t2 #sconto
+		sub $t2, $t1, $t2
+		mfhi $t3
+		blt $t3, 50, next
+		beq $t4, 0, next
+		addi $t2, $t2, 1
+next:	sw $t2, ($t5)
+		add $v0, $v0, $t2
+		addi $a0, $a0, 4
+		addi $t5, $t5, 4
+		addi $t0, $t0, 1
+		bne $t0, $a2, ciclo
+		jr $ra

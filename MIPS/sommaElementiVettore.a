@@ -1,0 +1,20 @@
+		.data
+		vett:	.word 5,7,3,4,3
+		result:	.word 0
+		
+		.text
+		.globl main
+		.ent main
+		main:
+				la		$t1, vett	#2° versione:	and $t1, $0, $0
+				and		$t3, $0, $0	#variabile tmp
+		lab1:	lw		$t0, ($t1)	#2° versione:	lw $t0, vett($t1)
+				add		$t3, $t3, $t0
+				addi	$t1, $t1, 4 #aggiorno indirizzo
+				bne		$t1, 20, lab1
+				
+				la		$t1, result
+				sw		$t3, ($t1)	#scrivo risultato in memoria
+				li		$vo,10
+				syscall
+		.end main

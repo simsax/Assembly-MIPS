@@ -1,0 +1,24 @@
+		.data
+giorni:		.byte 10
+ore:		.byte 6
+minuti: 	.byte 31
+risultato: 	.space 4
+
+
+		.text
+		.globl main
+		.ent main
+main: 	
+		lbu $t0, minuti
+		lbu $t1, ore
+		mul $t1, $t1, 60
+		addu $t0, $t0, $t1
+		lbu $t1, giorni
+		mul $t1, $t1, 24
+		mul $t1, $t1, 60
+		addu $t0, $t0, $t1
+		sw $t0, risultato
+	
+		li $v0, 10
+		syscall
+		.end main

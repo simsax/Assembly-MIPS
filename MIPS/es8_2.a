@@ -1,0 +1,54 @@
+LUNG = 6
+		.data
+anni:	.word 1945, 2008, 1800, 2006, 1748, 1600
+ris:	.space LUNG
+		.text
+		.globl main
+		.ent main
+main:	addi $sp, $sp, -4
+		sw $ra, ($sp)
+		la $a0, anni
+		la $a1, ris
+		li $a2, LUNG
+		jal bisestile
+		move $t0, $0
+		la $a1, ris
+stampa:	lb $a0, ($a1)
+		li $v0, 1
+		syscall
+		li $a0, ' '
+		li $v0, 11
+		syscall
+		addi $t0, $t0, 1
+		addi $a1, $a1, 1
+		bne $t0, LUNG, stampa
+		lw $ra, ($sp)
+		addi $sp, $sp, 4
+		jr $ra
+		.end main
+		
+bisestile:
+		move $t2, $0 # contatore
+ciclo1: lw $t1, ($a0)	# $t1 = anno
+		li $t0, 100
+		divu $t1, $t0
+		mfhi $t0
+		bne $t0, 0,next
+		li $t0, 400
+		divu $t1, $t0
+		mfhi $t0
+		bne $t0, 0, false
+		j true
+next:	li $t0, 4
+		divu $t1, $t0
+		mfhi $t0
+		bne $t0, 0, false
+true:	li $t0, 1
+		j fine
+false:	li $t0, 0
+fine:	sb $t0, ($a1)
+		addi $a0, $a0, 4
+		addi $a1, $a1, 1
+		addi $t2, $t2, 1
+		bne $t2, $a2, ciclo1
+		jr $ra

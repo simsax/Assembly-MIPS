@@ -1,0 +1,34 @@
+		.data
+mex_in:	.asciiz "Inserisci un numero: "
+mex_ok: .asciiz "\nInput valido.\n"
+mex_er: .asciiz "\nHai inserito un carattere.\n"
+mex_ko:	.asciiz "\nOk bella zì\n"
+
+		.text
+		.globl main
+		.ent main
+main: 	
+ciclo:	la $a0, mex_in
+		li $v0, 4
+		syscall
+		li $v0, 12
+		syscall
+		beq $v0, '\n', fine
+		blt $v0, '0', next
+		bgt $v0, '9', next
+		la $a0, mex_ok
+		li $v0, 4
+		syscall
+		j ciclo
+
+next:	la $a0, mex_err
+		li $v0, 4
+		syscall
+		j ciclo
+	
+fine:	la $a0, mex_ko
+		li $v0, 4
+		syscall
+		li $v0, 10
+		syscall
+		.end main

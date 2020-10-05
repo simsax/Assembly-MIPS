@@ -1,0 +1,25 @@
+		.data
+mex:	 .asciiz "Inserire un intero positivo"
+pari:	 .asciiz "Pari"
+dispari: .asciiz "Dispari"
+
+		.text
+		.globl main
+		.ent main
+main: 	
+		la $a0, mex
+		li $v0, 4
+		syscall
+		li $v0, 5
+		syscall
+		andi $t0, $v0, 1
+		li $v0, 4
+		bne $t0, $0, else
+		la $a0, pari
+		j fine
+else:	la $a0, dispari
+fine:	syscall		
+	
+		li $v0, 10
+		syscall
+		.end main

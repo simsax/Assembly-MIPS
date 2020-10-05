@@ -1,0 +1,58 @@
+		.data
+mexn:	.asciiz "Inserisci n: "
+mexk:	.asciiz "Inserisci k: "
+err:	.asciiz "Errore: k è maggiore n"
+		.text
+		.globl main
+		.ent main
+main:	li $v0, 4
+		la $a0, mexn
+		syscall
+		li $v0, 5
+		syscall
+		move $t0, $v0
+		li $v0, 4
+		la $a0, mexk
+		syscall
+		li $v0, 5
+		syscall
+		move $a1, $v0
+		move $a0, $t0
+		slt $t1, $a0, $a1
+		bne $t1, $0, errore
+		jal combina
+		move $t0, $v0
+		li $v0, 11
+		li $a0, 'C'
+		syscall
+		li $a0, '='
+		syscall
+		li $v0, 1
+		move $a0, $t0
+		syscall
+		j end
+errore: la $a0, err
+		li $v0, 4
+		syscall
+end:	li $v0, 10
+		syscall
+		.end main
+
+combina:
+		bne $a0, $a1, next
+		li $v0, 1
+		j fine
+next:	move $t0, $a0
+		move $t1, $a1
+		move $t3, $t0 #numeratore
+		sub $t4, $t0, $t1
+		addi $t4, $t4, 1
+ciclo1:	sub $t0, $t0, 1
+		mul $t3, $t3, $t0
+		bne $t0, $t4, ciclo1
+		move $t4, $t1 #denominatore
+ciclo2: sub $t1, $t1, 1
+		mul $t4, $t4, $t1
+		bne $t1, 1, ciclo2
+		div $v0, $t3, $t4
+fine:	jr $ra

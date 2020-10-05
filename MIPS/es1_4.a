@@ -1,0 +1,27 @@
+		.data
+NUM_ELEM = 20
+DIM = 4*NUM_ELEM
+vet:	.space DIM
+
+		.text
+		.globl main
+		.ent main
+main: 	
+		addi $t3, $0, 0 #counter
+		addi $t0, $0, 1 #oppure li $t0, 0
+		sw $t0, vet($t3)
+		addi $t3, $t3, 4
+		addi $t1, $0, 1
+		sw $t0, vet($t3)
+		addi $t3, $t3, 4
+		addi $t2, $0, 0
+loop:	add $t2, $t1, $t0
+		sw $t2, vet($t3)
+		addi $t3, $t3, 4
+		move $t0, $t1 #equivale a add $t0, $0, $t1
+		move $t1, $t2
+		bne $t3, DIM, loop
+	
+		li $v0, 10
+		syscall
+		.end main

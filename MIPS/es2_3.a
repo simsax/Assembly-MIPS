@@ -1,0 +1,62 @@
+		.data
+mex_in:	.asciiz "Inserisci un numero: "
+mex_ok: .asciiz "\nInput valido.\n"
+mex_4:	.asciiz "\nIl numero è rappresentabile su 4 byte\n"
+mex_er: .asciiz "\nHai inserito un carattere.\n"
+mex_ov: .asciiz "\nOverflow\n"
+mex_ko:	.asciiz "\nNon hai inserito alcun numero\n"
+ZERO = 0 - '0'
+
+		.text
+		.globl main
+		.ent main
+main: 	la $a0, mex_in
+		li $v0, 4
+		syscall
+		move $t0, $0 #contatore num caratteri letti
+		move $t1, $0 #valore introdotto
+		li $t3, 10 #costante
+loop:	li $v0, 12
+		syscall
+		beq $v0, '\n', fine
+		blt $v0, '0', next
+		bgt $v0, '9', next
+		addi $t0, $t0, 1
+		#conversione valore
+		multu $t1, $t3
+		mfhi $t1
+		bne $t1, $0, overflow
+		mflo $t1
+		addi $t2, $v0, ZERO
+		add $t2, $t1, $t2
+		bltu $t2, $t1, overflow
+		move $t1, $t2
+		j loop
+		
+fine:	beq $t0, 0, noInput
+		la $a0, mex_ok
+		li $v0, 4
+		syscall
+		li $v0, 1
+		move $a0, $t1
+		syscall
+		j end
+
+next:	la $a0, mex_err
+		li $v0, 4
+		syscall
+		j end
+	
+noInput: la $a0, mex_ko
+		li $v0, 4
+		syscall
+		j end
+		
+overflow: la $a0, mex_ov
+		li $v0, 4
+		syscall
+		j end
+		
+end:	li $v0, 10
+		syscall
+		.end main
